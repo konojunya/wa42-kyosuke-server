@@ -24,7 +24,9 @@ const getRestaurant = async ({ lat, lon }) => {
       url_mobile: r.url_mobile,
       image_url: r.image_url,
       address: r.address,
-      tel: r.tel
+      tel: r.tel,
+      latitude: r.latitude,
+      longitude: r.longitude
     }))
   } catch(e) {
     throw e
