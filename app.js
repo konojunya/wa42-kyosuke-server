@@ -1,18 +1,18 @@
 const express = require("express");
 const app = express();
 const axios = require("axios");
-const parseString = require('xml2js').parseString;
 
 // load dot env
 require('dotenv').config();
 
-const getRestaurant = async () => {
+const getRestaurant = async ({ lat, lon }) => {
+  console.log(process.env)
   try {
     const res = await axios.get("https://api.gnavi.co.jp/RestSearchAPI/v3/", {
       params: {
         keyid: process.env.API_KEY,
-        latitude: 34.702485,
-        longitude: 135.495951,
+        latitude: lat,
+        longitude: lon,
         range: 5
       }
     })
@@ -31,24 +31,45 @@ const getRestaurant = async () => {
   }
 }
 
-const getWeather = async () => {
+const getWeather = async ({ lat, lon }) => {
   try {
-    const res = await axios.get();
-    console.log(res.data)
+    const res = await axios.get(`http://api.openweathermap.org/data/2.5/find?lat=${lat}&lon=${lon}&APPID=${process.env.OEPN_WEATHER}`)
+    return res.data.list[0].weather[0]
   } catch(e) {
     throw e;
   }
 }
 
-// app.get("/api/all", async  (req, res) => {
-//   try {
-//     const rests = await getRestaurant();
-//     res.status(200);
-//     res.json(rests);
-//   } catch(e) {
-//     res.status(e.response.status);
-//     res.json(e.response);
-//   }
-// })
+app.use((req, res, next) => {
+  const { lat, lon } = req.query;
+  if(!lat || !lon) {
+    res.sendStatus(400)
+    return;
+  } else {
+    next();
+  }
+})
 
-// app.listen("3000")
+app.get("/api/restaurant", async  (req, res) => {
+  try {
+    const rests = await getRestaurant(req.query);
+    res.status(200);
+    res.json(rests);
+  } catch(e) {
+    res.status(e.response.status);
+    res.json(e.response);
+  }
+})
+
+app.get("/api/weather", async  (req, res) => {
+  try {
+    const weather = await getWeather(req.query);
+    res.status(200);
+    res.json(weather);
+  } catch(e) {
+    res.status(e.response.status);
+    res.json(e.response);
+  }
+})
+
+app.listen("3000")

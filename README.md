@@ -2,4 +2,5 @@
 WA42のマッシュアップサイトのAPIサーバー
 
 ## Deploy URL
-http://wa42-kyosuke-server.now.sh/
+
+https://wa42-kyosuke-server.now.sh/

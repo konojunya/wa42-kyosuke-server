@@ -1,3 +1,4 @@
 {
-  "alias": "wa42-kyosuke-server.now.sh"
+  "alias": "wa42-kyosuke-server.now.sh",
+  "dotenv": true
 }
