@@ -6,7 +6,6 @@ const axios = require("axios");
 require('dotenv').config();
 
 const getRestaurant = async ({ lat, lon }) => {
-  console.log(process.env)
   try {
     const res = await axios.get("https://api.gnavi.co.jp/RestSearchAPI/v3/", {
       params: {
@@ -36,7 +35,11 @@ const getRestaurant = async ({ lat, lon }) => {
 const getWeather = async ({ lat, lon }) => {
   try {
     const res = await axios.get(`http://api.openweathermap.org/data/2.5/find?lat=${lat}&lon=${lon}&APPID=${process.env.OEPN_WEATHER}`)
-    return res.data.list[0].weather[0]
+    return {
+      name: res.data.list[0].name,
+      coord: res.data.list[0].coord,
+      weather: res.data.list[0].weather[0]
+    }
   } catch(e) {
     throw e;
   }
